@@ -28,7 +28,7 @@ def input(sock):
         print "  from "+__uname__
         print
         try:
-            sock.send(ipt + "\n" + "  from "+__uname__)
+            sock.send(ipt + "\n" + "  from "+__uname__+"\n")
         except Exception as e:
             print e
             break
