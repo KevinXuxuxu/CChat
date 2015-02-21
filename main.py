@@ -1,7 +1,7 @@
 # use utf-8
 
-__author__ = "KevinXuxuxu"
-__email__ = "kevin.xu.fangzhou@gmail.com"
+__author__ = "KevinXuxuxu", "Tenut"
+__email__ = "kevin.xu.fangzhou@gmail.com", "treamug@gmail.com"
 
 __uname__ = "Host"
 __port__ = 9527
@@ -28,7 +28,7 @@ def input(sock):
         print "  from "+__uname__
         print
         try:
-            sock.send(__uname__+": "+ipt)
+            sock.send(ipt + "\n" + "  from"+__uname__)
         except Exception as e:
             print e
             break
