@@ -28,7 +28,7 @@ def input(sock):
         print "  from "+__uname__
         print
         try:
-            sock.send(ipt + "\n" + "  from "+__uname__+"\n")
+            sock.send(ipt + "\n" + "  from "+__uname__)
         except Exception as e:
             print e
             break
@@ -37,8 +37,8 @@ def input(sock):
 def recieve(sock):
     while True:
         rcv = sock.recv(1024)
-        if ":" not in rcv:
-            print rcv
+        if " terminated the conversation." in rcv:
+            print rcv+"\n"
             break
         print rcv
         print
@@ -108,7 +108,11 @@ def main():
             __uname__ = raw_input()
             #print __uname__
             print "new name set."
-
+        elif read == "port":
+            global __port__
+            __port__ = int(raw_input())
+            print "new port set."
+        
         print ">>",
         read = raw_input()
 
