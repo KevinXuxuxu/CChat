@@ -24,7 +24,7 @@ def printmsg(emsg):
     global __uname__
     if d['name'] != __uname__:
         data = d['data']+'\n'
-    print data+u"  from "+d['name']+u" at "+d['time']+u"\n"# % (data, d['name'], d['time'])
+    print(u"{}  from {} at {}\n".format(data, d['name'], d['time']))
 
 def encode(msg,host):
     global __uname__
@@ -62,12 +62,12 @@ class host:
             try:
                 d = json.loads(emsg)
             except Exception as e:
-                print e
-                print "----"+emsg+"----"
+                print(e)
+                print("----"+emsg+"----")
                 break
                 
             if d.has_key('quit'):
-                print d['name']+" has quit.\n"
+                print(d['name']+" has quit.\n")
                 self.send(emsg, None)
                 self.sockets[i].close()
                 self.alive[i] = False
@@ -86,7 +86,7 @@ class host:
             self.send(emsg, None)
 
             if msg == "q":
-                print "you closed the chat room."
+                print("you closed the chat room.")
                 ts = sk.socket(sk.AF_INET, sk.SOCK_STREAM)
                 global __port__
                 ts.connect(("localhost",__port__))
@@ -106,7 +106,7 @@ class host:
                 break
 
             bc = "%s from [%s:%s] joined." % (cliname, remoteHost, remotePort)
-            print bc+'\n'
+            print(bc+'\n')
             ebc = json.dumps({'data':bc, 'broadcast':True})
             self.send(ebc, clisock)
             
@@ -128,7 +128,7 @@ class host:
         
 def tcpServer():
     h = host()
-    print "Chat room started!\n"
+    print("Chat room started!\n")
     h.start()
     del(h)
 
@@ -141,10 +141,10 @@ def clisend(sock):
             sock.send(emsg)
         except Exception as e:
             if msg != 'q':
-                print e
+                print(e)
                 break
         if msg == 'q':
-            print "quiting"
+            print("quiting")
             break
         printmsg(emsg)
 
@@ -153,15 +153,15 @@ def clirecv(sock):
         emsg = sock.recv(1024)
         d = json.loads(emsg)
         if d.has_key('broadcast'):
-            print d['data']+'\n'
+            print(d['data']+'\n')
         elif d.has_key('quit'):
             global __uname__
             if d['name'] == __uname__:
                 break
             else:
-                print d['name']+" has quit.\n"
+                print(d['name']+" has quit.\n")
         elif d.has_key('term'):
-            print "host has closed the chat room, enter q to quit."
+            print("host has closed the chat room, enter q to quit.")
             sock.send(emsg)
             break
         else:
@@ -173,14 +173,14 @@ def tcpClient(addr, port):
     try:
         clisock.connect((addr, port))
     except Exception as e:
-        print e
+        print(e)
         return
-    print "waiting for response..."
+    print("waiting for response...")
     res = clisock.recv(1024)
     if res != "confirm":
-        print "connection failed!"
+        print("connection failed!")
         return
-    print "joined!"
+    print("joined!")
     global __uname__
     clisock.send(__uname__)
     tsend = th.Thread(target=clisend, args=(clisock,))
@@ -191,11 +191,11 @@ def tcpClient(addr, port):
     trecv.start()
     tsend.join()
     clisock.close()
-    print "you quited the chat room."
+    print("you quited the chat room.")
     
 def main():
-    print "Welcome to Cchat."
-    print ">>",
+    print("Welcome to Cchat.")
+    print(">>"),
     read = raw_input()
     while read != "quit":
         if read == "host":
