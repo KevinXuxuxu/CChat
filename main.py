@@ -37,8 +37,11 @@ def input(sock):
 def recieve(sock):
     while True:
         rcv = sock.recv(1024)
+        if rcv == "$end$":
+            break
         if " terminated the conversation." in rcv:
             print rcv+"\n"
+            sock.send("$end$")
             break
         print rcv
         print
@@ -50,7 +53,7 @@ def conversation(sock):
     for t in threads:
         t.setDaemon(True)
         t.start()
-    threads[1].join()
+    #threads[1].join()
     threads[0].join()
     sock.close()
     print "conversation over."
