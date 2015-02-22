@@ -8,7 +8,8 @@
 
 Basic commands:
 
-- `name`: set current name to be displayed over conversation.
+- `name`: set current name to be displayed over conversation. (default `Host`)
+- `port`: set current port for establishing host (default `9527`)
 - `host`: host a conversation
 	1. `waiting for connection`
 	-  if anyone connects: `[127.0.0.1:54516] trying to connect`
