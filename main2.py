@@ -15,14 +15,16 @@ import socket as sk
 import re
 import json
 from time import asctime
+import pdb
 
 def printmsg(emsg):
+    #pdb.set_trace()
     d = json.loads(emsg)
     data = ''
     global __uname__
     if d['name'] != __uname__:
         data = d['data']+'\n'
-    print "%s  from %s at %s\n" % (data, d['name'], d['time'])
+    print data+u"  from "+d['name']+u" at "+d['time']+u"\n"# % (data, d['name'], d['time'])
 
 def encode(msg,host):
     global __uname__
