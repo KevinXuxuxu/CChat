@@ -17,12 +17,14 @@ import json
 from time import asctime
 
 def printmsg(emsg):
+    import pdb
+    pdb.set_trace()
     d = json.loads(emsg)
     data = ''
     global __uname__
     if d['name'] != __uname__:
         data = d['data']+'\n'
-    print "%s  from %s at %s\n" % (data, d['name'], d['time'])
+    print u"{}  from {} at {}\n".format(data, d['name'], d['time'])
 
 def encode(msg,host):
     global __uname__
