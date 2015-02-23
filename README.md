@@ -3,7 +3,6 @@
 - Basic P2P chatting is finished. More functions are to be added including
 	- better UI (considering `curses`)
 	- chatting record export
-	- 
 
 ### Usage
 
