@@ -1,6 +1,6 @@
 # CChat
 - A command line tool for chatting.
-- Basic P2P chatting is finished. More functions are to be added including
+- Basic P2P & multi chatting is finished. More functions are to be added including
 	- better UI (considering `curses`)
 	- chatting record export
 
@@ -16,10 +16,11 @@
 	- enter `confirm` and start conversation
 - `connect`: connect to a given host
 	1. `where?` enter ip and port `localhost:9527`
-	2. `waiting for acception`
+	2. `waiting for acceptance`
 	3. `confirmed` and start conversation
 
-#### multi-chatter:
+#### multi-chatter: 
+(`main.cpp` in multi-chatter branch)
 
 - `name`, `port` ...
 - `host`: start a chat room. Entrance does not require approval.
