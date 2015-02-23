@@ -38,10 +38,13 @@ def encode(msg,host):
 class host:
     sockets = []
     alive = []
+    names = []
     hsock = sk.socket(sk.AF_INET, sk.SOCK_STREAM)
     def __init__(self):
         global __port__
+        global __uname__
         self.hsock.bind(('', __port__))
+        self.names.append(__uname__)
     
     def send(self, msg, esock):
         for i in range(0,len(self.sockets)):
@@ -71,6 +74,7 @@ class host:
                 self.send(emsg, None)
                 self.sockets[i].close()
                 self.alive[i] = False
+                self.names.remove(d['name'])
                 break
             if d.has_key('term'):
                 self.sockets[i].close()
@@ -99,11 +103,15 @@ class host:
         self.hsock.listen(5)
         while True:
             clisock, (remoteHost, remotePort) = self.hsock.accept()
-            clisock.send("confirm")
+            clisock.send("name?")
             cliname = clisock.recv(1024)
             if cliname == "terminate" and remoteHost == "127.0.0.1":
                 self.closeAll()
                 break
+            while cliname in self.names:
+                clisock.send(json.dumps({'data':'name is taken, please choose enter a new name.', 'broadcast':True}))
+                cliname = clisock.recv(1024)
+            clisock.send(json.dumps({"data":"confirm"}))
 
             bc = "%s from [%s:%s] joined." % (cliname, remoteHost, remotePort)
             print(bc+'\n')
@@ -112,6 +120,7 @@ class host:
             
             self.sockets.append(clisock)
             self.alive.append(True)
+            self.names.append(cliname)
             t = th.Thread(target=self.recv, args=(len(self.sockets)-1,))
             t.setDaemon(True)
             t.start()
@@ -177,12 +186,21 @@ def tcpClient(addr, port):
         return
     print("waiting for response...")
     res = clisock.recv(1024)
-    if res != "confirm":
+    if res != "name?":
         print("connection failed!")
         return
+    while True:
+        global __uname__
+        clisock.send(__uname__)
+        res = clisock.recv(1024)
+        eres = json.loads(res)
+        if not eres.has_key('broadcast'):
+            break
+        print(eres['data'])
+        print "new name:",
+        __uname__ = raw_input()
     print("joined!")
-    global __uname__
-    clisock.send(__uname__)
+    
     tsend = th.Thread(target=clisend, args=(clisock,))
     trecv = th.Thread(target=clirecv, args=(clisock,))
     tsend.setDaemon(True)
