@@ -232,6 +232,9 @@ def main():
             global __port__
             __port__ = int(raw_input())
             print "new port set."
+        elif read == "info":
+            # global __port__, __uname__
+            print(u"port:   {}\nname:   {}".format(__port__, __uname__))
         
         print ">>",
         read = raw_input()
