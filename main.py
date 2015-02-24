@@ -123,7 +123,7 @@ class host:
                 self.closeAll()
                 break
             while cliname in self.names:
-                clisock.send(json.dumps({'data':'name is taken, please choose enter a new name.', 'broadcast':True}))
+                clisock.send(json.dumps({'data':'name '+cliname+' is taken, please enter a new name.', 'broadcast':True}))
                 cliname = clisock.recv(1024)
             clisock.send(json.dumps({"data":"confirm"}))
 
