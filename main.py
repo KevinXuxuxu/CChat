@@ -17,14 +17,28 @@ import json
 from time import asctime
 import pdb
 
-def printmsg(emsg):
+class printer:
+
+    def p(self, ident, msg):
+        if ident == "json":
+            self.printmsg(msg)
+        elif ident == "info":
+            print(msg)
+        elif ident == "bc":
+            print(msg+'\n')
+        elif ident == ':':
+            print msg,
+            
+    def printmsg(self, emsg):
     #pdb.set_trace()
-    d = json.loads(emsg)
-    data = u''
-    global __uname__
-    if d['name'] != __uname__:
-        data = d['data']+u'\n'
-    print((u"{}  from {} at {}\n").format(data, d['name'], d['time']))
+        d = json.loads(emsg)
+        data = u''
+        global __uname__
+        if d['name'] != __uname__:
+            data = d['data']+u'\n'
+        print((u"{}  from {} at {}\n").format(data, d['name'], d['time']))
+
+Printer = printer()
 
 def encode(msg,host):
     global __uname__
@@ -70,7 +84,7 @@ class host:
                 break
                 
             if d.has_key('quit'):
-                print(d['name']+" has quit.\n")
+                Printer.p("info",d['name']+" has quit.")
                 self.send(emsg, None)
                 self.sockets[i].close()
                 self.alive[i] = False
@@ -80,7 +94,7 @@ class host:
                 self.sockets[i].close()
                 self.alive[i] = False
                 break
-            printmsg(emsg)
+            Printer.p('json',emsg)
             self.send(emsg, self.sockets[i])
 
     def sendTrd(self):
@@ -90,14 +104,14 @@ class host:
             self.send(emsg, None)
 
             if msg == "q":
-                print("you closed the chat room.")
+                Printer.p("info","you closed the chat room.")
                 ts = sk.socket(sk.AF_INET, sk.SOCK_STREAM)
                 global __port__
                 ts.connect(("localhost",__port__))
                 ts.send("terminate")
                 ts.close()
                 break
-            printmsg(emsg)
+            Printer.p('json',emsg)
 
     def lisRecvTrd(self):
         self.hsock.listen(5)
@@ -114,7 +128,7 @@ class host:
             clisock.send(json.dumps({"data":"confirm"}))
 
             bc = "%s from [%s:%s] joined." % (cliname, remoteHost, remotePort)
-            print(bc+'\n')
+            Printer.p('bc',bc)
             ebc = json.dumps({'data':bc, 'broadcast':True})
             self.send(ebc, clisock)
             
@@ -137,7 +151,7 @@ class host:
         
 def tcpServer():
     h = host()
-    print("Chat room started!\n")
+    Printer.p('bc',"Chat room started!")
     h.start()
     del(h)
 
@@ -153,28 +167,28 @@ def clisend(sock):
                 print(e)
                 break
         if msg == 'q':
-            print("quiting")
+            Printer.p('info',"quiting")
             break
-        printmsg(emsg)
+        Printer.p('json',emsg)
 
 def clirecv(sock):
     while True:
         emsg = sock.recv(1024)
         d = json.loads(emsg)
         if d.has_key('broadcast'):
-            print(d['data']+'\n')
+            Printer.p('bc',d['data'])
         elif d.has_key('quit'):
             global __uname__
             if d['name'] == __uname__:
                 break
             else:
-                print(d['name']+" has quit.\n")
+                Printer.p('bc',d['name']+" has quit.")
         elif d.has_key('term'):
-            print("host has closed the chat room, enter q to quit.")
+            Printer.p('bc',"host has closed the chat room, enter q to quit.")
             sock.send(emsg)
             break
         else:
-            printmsg(emsg)
+            Printer.p('json',emsg)
                 
 
 def tcpClient(addr, port):
@@ -184,10 +198,10 @@ def tcpClient(addr, port):
     except Exception as e:
         print(e)
         return
-    print("waiting for response...")
+    Printer.p('info',"waiting for response...")
     res = clisock.recv(1024)
     if res != "name?":
-        print("connection failed!")
+        Printer.p('info',"connection failed!")
         return
     while True:
         global __uname__
@@ -196,10 +210,10 @@ def tcpClient(addr, port):
         eres = json.loads(res)
         if not eres.has_key('broadcast'):
             break
-        print(eres['data'])
-        print "new name:",
+        Printer.p('info',eres['data'])
+        Printer.p(':', "new name:")
         __uname__ = raw_input()
-    print("joined!")
+    Printer.p('bc',"joined!")
     
     tsend = th.Thread(target=clisend, args=(clisock,))
     trecv = th.Thread(target=clirecv, args=(clisock,))
@@ -209,10 +223,10 @@ def tcpClient(addr, port):
     trecv.start()
     tsend.join()
     clisock.close()
-    print("you quited the chat room.")
+    Printer.p('info',"you quited the chat room.")
     
 def main():
-    print("Welcome to Cchat.")
+    Printer.p('info',"Welcome to Cchat.")
     print(">>"),
     read = raw_input()
     while read != "quit":
