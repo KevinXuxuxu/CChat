@@ -23,6 +23,7 @@
 (`main.cpp` in multi-chatter branch)
 
 - `name`, `port` ...
+- `info`: print current global variables e.g `name` and `port`
 - `host`: start a chat room. Entrance does not require approval.
 	- `Bob from [127.0.0.1:54516] joined.`
 - `connect`: connect to a given host
