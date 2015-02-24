@@ -84,7 +84,7 @@ class host:
                 break
                 
             if d.has_key('quit'):
-                Printer.p("info",d['name']+" has quit.")
+                Printer.p("bc",d['name']+" has quit.")
                 self.send(emsg, None)
                 self.sockets[i].close()
                 self.alive[i] = False
