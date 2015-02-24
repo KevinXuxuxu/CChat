@@ -1,4 +1,5 @@
 # use utf-8
+# version 1.1
 
 __author__ = "KevinXuxuxu", "Tenut"
 __email__ = "kevin.xu.fangzhou@gmail.com", "treamug@gmail.com"
